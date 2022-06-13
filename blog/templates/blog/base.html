@@ -10,6 +10,7 @@
     <!--Bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 
     <!--Medium style editor-->
     <script src="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor.min.js"></script>
@@ -18,7 +19,7 @@
 
 
     <!--Custom cssel -->
-    <link rel="stylesheet" href="{static 'css/blog.css'}">
+    <link rel="stylesheet" href="{%static 'css/blog.css'%}">
 
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,11 +27,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Russo+One&display=swap"
         rel="stylesheet">
 
+    
+
 </head>
 
 <body class="loader">
     <!--Navbar-->
-    <nav class="navbar navbar-expand-lg bg-light techfonts custom-navbar">
+    <nav class="navbar navbar-expand-lg bg-light techfonts custom-navbar loader">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -46,22 +49,21 @@
                 </ul>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {%if user.is_authenticated %}
-                    <li>
-                        <a href="{% url 'post_new' %}">New Post</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'post_new' %}">New Post</a>
                     </li>
-                    <li>
-                        <a href="{% url 'post_draft_list' %}">Drafts</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'post_draft_list' %}">Drafts</a>
                     </li>
-                    <li>
-                        <a href="{% url 'logout' %}">Log Out</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>
-                    <li>
-                        <a>Welcome: {{user.username}}</a>
+                    <li class="nav-item">
+                        <a class="nav-link" >Welcome: {{user.username}}</a>
                     </li>
                     {%else%}
-                    <li>
-                        <a class="nav navbar-right" href="{%url 'login'%}"><span
-                                class="glyphicon glyphicon-user"></span></a>
+                    <li class="nav-item">
+                        <a class="nav navbar-right" href="{%url 'login'%}"><i class="bi bi-person-circle"></i></a>
                     </li>
 
                     {% endif %}

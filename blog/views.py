@@ -20,26 +20,39 @@ class AboutView(TemplateView):
 
 class PostListView(ListView):
     model = Post
-
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['count']=0
+        for i in Comment.objects.all():
+            if i.approved_comment==True:
+                context['count']+=1
+        return context
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
 
 class PostDetailView(DetailView):
-    models = Post
+    model = Post
+    def id(request,pk):
+        template_name='blog/post_detail.html'
+        post = get_object_or_404(Post,pk=pk)
+        
 
+        
 
 class CreatePostView(CreateView, LoginRequiredMixin):
     login_url = '/login/'
     redirect_field_name = 'blog/post_detail.html'
     from_class = PostForm
     model = Post
+    fields=('author','title','text')
 
 
 class PostUpdateView(UpdateView, LoginRequiredMixin):
     login_url = '/login/'
     redirect_field_name = 'blog/post_detail.html'
     from_class = PostForm
+    fields=('author','title','text')
     model = Post
 
 
@@ -48,26 +61,23 @@ class PostDeleteView(DeleteView, LoginRequiredMixin):
     success_url = reverse_lazy('post_list')
 
 
-class DraftList(ListView, LoginRequiredMixin):
-    login_url = '/login/'
-    redirect_field_name = 'blog/post_list.html'
-    model = Post
-
-    def get_queryset(self):
-        return Post.objects.filter(published_date__isnull=True).order_by('create_date')
+@login_required
+def post_draft_list(request):
+    posts = Post.objects.filter(published_date__isnull=True).order_by('create_date')
+    return render(request, 'blog/post_draft_list.html', {'posts': posts})
 
 @login_required
 def post_publish(request,pk):
     post=get_object_or_404(Post,pk=pk)
     post.publish()
-    return redirect(request,'post_detail')
+    return redirect('post_detail',pk=pk)
 
 ################################
 ################################
 
 @login_required
 def add_comment_to_post(request, pk):
-    post=get_object_or_404(Post,pk)
+    post=get_object_or_404(Post,pk=pk)
     if request.method == 'POST':
         form=CommentForm(request.POST)
         if form.is_valid():
